@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Bash(powershell *))",
+      "Bash(Bash(Invoke-WebRequest *))",
+      "Bash(Bash(Expand-Archive *))",
+      "Bash(Bash(Remove-Item *))",
+      "Bash(Bash(powershell *))",
+      "Bash(Bash(Invoke-WebRequest *))",
+      "Bash(Bash(Expand-Archive *))",
+      "Bash(Bash(Remove-Item *))",
+      "Bash(Bash(set *))",
+      "Bash(Bash(mvn *))",
+      "Bash(Bash(set *))",
+      "Bash(Bash(cd *))",
+      "Bash(Bash(mvn *))"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+Main.class
+service\MusicaService.class
+service\FonteAudioService.class
+service\LocalAudioService.class
+model\Playlist.class
+model\Musica.class
+util\Validador.class
+model\Usuario.class
