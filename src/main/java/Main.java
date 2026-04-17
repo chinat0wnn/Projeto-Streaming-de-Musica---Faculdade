@@ -1,6 +1,8 @@
 import model.Musica;
 import model.Playlist;
 import model.Usuario;
+import model.UsuarioFree;
+import model.UsuarioPremium;
 import service.LocalAudioService;
 import service.FonteAudioService;
 import service.MusicaService;
@@ -305,22 +307,146 @@ public class Main {
     }
 
     private static void demoPOO() {
-        System.out.println("--- Demo POO: Classe, Objeto e Static ---");
+        System.out.println("=== Demo POO: Encapsulamento, Construtores e Heranca ===");
+        System.out.println();
 
-        Usuario usuario = new Usuario("Breno", "breno@email.com");
+        // ── 1. Construtor com validacao ──────────────────────────
+        System.out.println("--- 1. Construtor com validacao ---");
+        try {
+            System.out.println("Tentando criar Musica com titulo vazio...");
+            new Musica("", "Artista", "Rock", 180, "arquivo.mp3");
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
 
-        System.out.println("Musica.validarFormatoAudio('.mp3') = " + Musica.validarFormatoAudio(".mp3"));
-        System.out.println("Musica.validarFormatoAudio('.flac') = " + Musica.validarFormatoAudio(".flac"));
+        try {
+            System.out.println("Tentando criar Musica com duracao negativa...");
+            new Musica("Teste", "Artista", "Rock", -10, "arquivo.mp3");
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
 
+        try {
+            System.out.println("Tentando criar Musica com arquivo .flac...");
+            new Musica("Teste", "Artista", "Rock", 180, "arquivo.flac");
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
+        System.out.println();
+
+        // ── 2. Setters com validacao ─────────────────────────────
+        System.out.println("--- 2. Setters com validacao ---");
         Musica m1 = new Musica("Bohemian Rhapsody", "Queen", "Rock", 354, "caminho/nao-usado.mp3");
+        System.out.println("Musica criada: " + m1.getTitulo());
+
+        try {
+            System.out.println("Tentando setar titulo vazio via setTitulo...");
+            m1.setTitulo("");
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
+
+        try {
+            System.out.println("Tentando setar duracao zero via setDuracao...");
+            m1.setDuracao(0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
+        System.out.println("Titulo continua: " + m1.getTitulo() + " (encapsulamento protegeu!)");
+        System.out.println();
+
+        // ── 3. Usuario com validacao de email ────────────────────
+        System.out.println("--- 3. Usuario com validacao de email ---");
+        Usuario usuario = new UsuarioPremium("Breno", "breno@email.com");
+        System.out.println("Usuario criado: " + usuario);
+
+        try {
+            System.out.println("Tentando setar email invalido (sem @)...");
+            usuario.setEmail("emailinvalido");
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
+
+        usuario.setNome("Breno Brasil");
+        System.out.println("Nome atualizado via setter: " + usuario.getNome());
+        System.out.println();
+
+        // ── 4. Metodo static ─────────────────────────────────────
+        System.out.println("--- 4. Metodo static ---");
+        System.out.println("Musica.validarFormatoAudio('.mp3')  = " + Musica.validarFormatoAudio(".mp3"));
+        System.out.println("Musica.validarFormatoAudio('.flac') = " + Musica.validarFormatoAudio(".flac"));
+        System.out.println();
+
+        // ── 5. Playlist com descricao (construtor sobrecarregado)
+        System.out.println("--- 5. Playlist com construtor sobrecarregado ---");
         Musica m2 = new Musica("Billie Jean", "Michael Jackson", "Pop", 294, "caminho/nao-usado.wav");
 
-        Playlist p = usuario.criarPlaylist("Favoritas");
+        Playlist p = usuario.criarPlaylist("Favoritas", "Minhas musicas preferidas");
         usuario.adicionarNaPlaylist("Favoritas", m1);
         usuario.adicionarNaPlaylist("Favoritas", m2);
 
+        System.out.println("Playlist criada: " + p);
         p.mostrarMusicas();
+        System.out.println();
         p.tocarTudo();
+        System.out.println();
+
+        // ── 6. Heranca: UsuarioFree vs UsuarioPremium ────────────
+        System.out.println("--- 6. Heranca: Free vs Premium ---");
+
+        // Polimorfismo: variavel do tipo base recebe subclasses
+        Usuario free = new UsuarioFree("Carlos", "carlos@email.com");
+        Usuario premium = new UsuarioPremium("Ana", "ana@email.com");
+
+        System.out.println("Free:    " + free);
+        System.out.println("Premium: " + premium);
+        System.out.println();
+
+        // Limites diferentes via polimorfismo
+        System.out.println("free.getMaxPlaylists()    = " + free.getMaxPlaylists());
+        System.out.println("premium.getMaxPlaylists() = ilimitado");
+        System.out.println("free.getMaxMusicasPorPlaylist()    = " + free.getMaxMusicasPorPlaylist());
+        System.out.println("premium.getMaxMusicasPorPlaylist() = ilimitado");
+        System.out.println();
+
+        // Anuncio vs sem anuncio
+        System.out.println("Anuncio do Free:");
+        free.exibirAnuncio();
+        System.out.println("Anuncio do Premium: (nenhum)");
+        premium.exibirAnuncio();
+        System.out.println();
+
+        // Testando limite de playlists do Free
+        System.out.println("Criando 3 playlists no Free (limite)...");
+        free.criarPlaylist("Rock");
+        free.criarPlaylist("Pop");
+        free.criarPlaylist("Jazz");
+        System.out.println("  3 playlists criadas com sucesso.");
+
+        try {
+            System.out.println("Tentando criar a 4a playlist...");
+            free.criarPlaylist("Blues");
+        } catch (IllegalArgumentException e) {
+            System.out.println("  ERRO capturado: " + e.getMessage());
+        }
+        System.out.println();
+
+        // instanceof e metodo exclusivo
+        System.out.println("premium instanceof Usuario = " + (premium instanceof Usuario));
+        System.out.println("free instanceof UsuarioFree = " + (free instanceof UsuarioFree));
+
+        if (premium instanceof UsuarioPremium) {
+            System.out.println("\nShuffle exclusivo do Premium:");
+            UsuarioPremium prem = (UsuarioPremium) premium;
+            Playlist pShuffle = prem.criarPlaylist("Shuffle Test");
+            prem.adicionarNaPlaylist("Shuffle Test", m1);
+            prem.adicionarNaPlaylist("Shuffle Test", m2);
+            prem.adicionarNaPlaylist("Shuffle Test", new Musica("Imagine", "John Lennon", "Rock", 183, "caminho/nao-usado.mp3"));
+            prem.tocarShuffle(pShuffle);
+        }
+
+        System.out.println();
+        System.out.println("=== Fim da Demo ===");
     }
 
     private static void gerenciarPlaylists() {
@@ -328,17 +454,20 @@ public class Main {
 
         int opcao = -1;
         while (opcao != 0) {
-            System.out.println("+-------------------------------+");
-            System.out.println("|      GERENCIAR PLAYLISTS      |");
-            System.out.println("+-------------------------------+");
-            System.out.println("| Usuario: " + usuarioAtual.getNome() + " <" + usuarioAtual.getEmail() + ">");
-            System.out.println("| [1] Criar playlist            |");
-            System.out.println("| [2] Listar playlists          |");
-            System.out.println("| [3] Adicionar musica na lista |");
-            System.out.println("| [4] Mostrar musicas playlist  |");
-            System.out.println("| [5] Tocar playlist            |");
-            System.out.println("| [0] Voltar                    |");
-            System.out.println("+-------------------------------+");
+            System.out.println("+-----------------------------------+");
+            System.out.println("|        GERENCIAR PLAYLISTS        |");
+            System.out.println("+-----------------------------------+");
+            System.out.println("| " + usuarioAtual);
+            System.out.println("| [1] Criar playlist                |");
+            System.out.println("| [2] Listar playlists              |");
+            System.out.println("| [3] Adicionar musica na lista     |");
+            System.out.println("| [4] Mostrar musicas playlist      |");
+            System.out.println("| [5] Tocar playlist                |");
+            if (usuarioAtual instanceof UsuarioPremium) {
+                System.out.println("| [6] Tocar playlist (SHUFFLE)      |");
+            }
+            System.out.println("| [0] Voltar                        |");
+            System.out.println("+-----------------------------------+");
 
             try {
                 System.out.print("Escolha uma opcao: ");
@@ -359,6 +488,9 @@ public class Main {
                         break;
                     case 5:
                         tocarPlaylist();
+                        break;
+                    case 6:
+                        tocarPlaylistShuffle();
                         break;
                     case 0:
                         break;
@@ -383,8 +515,20 @@ public class Main {
         String nome = scanner.nextLine();
         System.out.print("Email: ");
         String email = scanner.nextLine();
-        usuarioAtual = new Usuario(nome, email);
-        System.out.println("Usuario criado com sucesso!");
+
+        System.out.println("Escolha seu plano:");
+        System.out.println("  [1] Free   (max 3 playlists, 5 musicas/playlist, com anuncios)");
+        System.out.println("  [2] Premium (ilimitado, sem anuncios, modo shuffle)");
+        System.out.print("Plano: ");
+        String plano = scanner.nextLine().trim();
+
+        if (plano.equals("2")) {
+            usuarioAtual = new UsuarioPremium(nome, email);
+        } else {
+            usuarioAtual = new UsuarioFree(nome, email);
+        }
+
+        System.out.println("Usuario criado com sucesso! Plano: " + usuarioAtual.getTipoUsuario());
         System.out.println();
     }
 
@@ -475,7 +619,28 @@ public class Main {
             System.out.println("Playlist nao encontrada.");
             return;
         }
+        usuarioAtual.exibirAnuncio();
         playlist.tocarTudo();
+    }
+
+    private static void tocarPlaylistShuffle() {
+        if (!(usuarioAtual instanceof UsuarioPremium)) {
+            System.out.println("Funcionalidade exclusiva do plano Premium!");
+            return;
+        }
+        if (usuarioAtual.getPlaylists().isEmpty()) {
+            System.out.println("Nenhuma playlist criada.");
+            return;
+        }
+        listarPlaylists();
+        System.out.print("Digite o nome da playlist: ");
+        String nomePlaylist = scanner.nextLine();
+        Playlist playlist = buscarPlaylist(nomePlaylist);
+        if (playlist == null) {
+            System.out.println("Playlist nao encontrada.");
+            return;
+        }
+        ((UsuarioPremium) usuarioAtual).tocarShuffle(playlist);
     }
 
     private static Playlist buscarPlaylist(String nomePlaylist) {

@@ -8,13 +8,28 @@ public class Musica {
     private double duracao;
     private String caminhoArquivo;
 
+    // ── Construtores ──────────────────────────────────────────────
+
+    /**
+     * Construtor completo — garante que o objeto nasce em estado valido.
+     * Todas as validacoes sao delegadas aos setters para evitar duplicacao.
+     */
     public Musica(String titulo, String artista, String genero, double duracao, String caminhoArquivo) {
-        this.titulo = titulo;
-        this.artista = artista;
-        this.genero = genero;
-        this.duracao = duracao;
-        this.caminhoArquivo = caminhoArquivo;
+        setTitulo(titulo);
+        setArtista(artista);
+        setGenero(genero);
+        setDuracao(duracao);
+        setCaminhoArquivo(caminhoArquivo);
     }
+
+    /**
+     * Construtor simplificado — util para demos onde o arquivo nao importa.
+     */
+    public Musica(String titulo, String artista, String genero, double duracao) {
+        this(titulo, artista, genero, duracao, "sem-arquivo.mp3");
+    }
+
+    // ── Metodos de negocio ────────────────────────────────────────
 
     public void tocar() {
         int minutos = (int) duracao / 60;
@@ -30,12 +45,17 @@ public class Musica {
         return f.equals(".mp3") || f.equals(".wav");
     }
 
+    // ── Getters e Setters (com validacao) ─────────────────────────
+
     public String getTitulo() {
         return titulo;
     }
 
     public void setTitulo(String titulo) {
-        this.titulo = titulo;
+        if (titulo == null || titulo.trim().isEmpty()) {
+            throw new IllegalArgumentException("O titulo nao pode ser vazio.");
+        }
+        this.titulo = titulo.trim();
     }
 
     public String getArtista() {
@@ -43,7 +63,10 @@ public class Musica {
     }
 
     public void setArtista(String artista) {
-        this.artista = artista;
+        if (artista == null || artista.trim().isEmpty()) {
+            throw new IllegalArgumentException("O artista nao pode ser vazio.");
+        }
+        this.artista = artista.trim();
     }
 
     public String getGenero() {
@@ -51,7 +74,10 @@ public class Musica {
     }
 
     public void setGenero(String genero) {
-        this.genero = genero;
+        if (genero == null || genero.trim().isEmpty()) {
+            throw new IllegalArgumentException("O genero nao pode ser vazio.");
+        }
+        this.genero = genero.trim();
     }
 
     public double getDuracao() {
@@ -59,6 +85,9 @@ public class Musica {
     }
 
     public void setDuracao(double duracao) {
+        if (duracao <= 0) {
+            throw new IllegalArgumentException("A duracao deve ser maior que zero.");
+        }
         this.duracao = duracao;
     }
 
@@ -67,8 +96,17 @@ public class Musica {
     }
 
     public void setCaminhoArquivo(String caminhoArquivo) {
-        this.caminhoArquivo = caminhoArquivo;
+        if (caminhoArquivo == null || caminhoArquivo.trim().isEmpty()) {
+            throw new IllegalArgumentException("O caminho do arquivo nao pode ser vazio.");
+        }
+        String nome = caminhoArquivo.trim().toLowerCase();
+        if (!nome.endsWith(".mp3") && !nome.endsWith(".wav")) {
+            throw new IllegalArgumentException("Formato de arquivo nao suportado. Use .mp3 ou .wav.");
+        }
+        this.caminhoArquivo = caminhoArquivo.trim();
     }
+
+    // ── toString ──────────────────────────────────────────────────
 
     @Override
     public String toString() {

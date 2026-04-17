@@ -5,23 +5,58 @@ import java.util.Collections;
 import java.util.List;
 
 public class Playlist {
-    private final String nome;
+
+    private String nome;
+    private String descricao;
     private final List<Musica> listaMusicas = new ArrayList<>();
 
+    // ── Construtores ──────────────────────────────────────────────
+
+    /**
+     * Construtor com apenas o nome da playlist.
+     */
     public Playlist(String nome) {
+        setNome(nome);
+        this.descricao = "";
+    }
+
+    /**
+     * Construtor sobrecarregado — permite definir nome e descricao.
+     */
+    public Playlist(String nome, String descricao) {
+        setNome(nome);
+        setDescricao(descricao);
+    }
+
+    // ── Getters e Setters (com validacao) ─────────────────────────
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
             throw new IllegalArgumentException("O nome da playlist nao pode ser vazio.");
         }
         this.nome = nome.trim();
     }
 
-    public String getNome() {
-        return nome;
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        if (descricao == null) {
+            throw new IllegalArgumentException("A descricao nao pode ser nula.");
+        }
+        this.descricao = descricao.trim();
     }
 
     public List<Musica> getListaMusicas() {
         return Collections.unmodifiableList(listaMusicas);
     }
+
+    // ── Metodos de negocio ────────────────────────────────────────
 
     public void adicionarMusica(Musica m) {
         if (m == null) {
@@ -32,6 +67,9 @@ public class Playlist {
 
     public void mostrarMusicas() {
         System.out.println("--- Playlist: " + nome + " ---");
+        if (!descricao.isEmpty()) {
+            System.out.println("    " + descricao);
+        }
         if (listaMusicas.isEmpty()) {
             System.out.println("(vazia)");
             return;
@@ -52,5 +90,12 @@ public class Playlist {
             m.tocar();
         }
     }
-}
 
+    // ── toString ──────────────────────────────────────────────────
+
+    @Override
+    public String toString() {
+        return String.format("Playlist: %s | Descricao: %s | Musicas: %d",
+                nome, descricao.isEmpty() ? "(sem descricao)" : descricao, listaMusicas.size());
+    }
+}

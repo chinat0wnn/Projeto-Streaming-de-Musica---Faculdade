@@ -41,4 +41,15 @@ public final class Validador {
             }
         }
     }
+
+    /**
+     * Valida formato basico de email (deve conter '@' e '.').
+     */
+    public static void validarEmail(String email) {
+        validarString(email, "email");
+        String emailTrimmed = email.trim();
+        if (!emailTrimmed.contains("@") || !emailTrimmed.contains(".")) {
+            throw new IllegalArgumentException("Formato de email invalido. Deve conter '@' e '.'");
+        }
+    }
 }
