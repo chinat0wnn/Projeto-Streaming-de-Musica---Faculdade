@@ -12,6 +12,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -446,6 +447,20 @@ public class Main {
         }
 
         System.out.println();
+        
+        // ── 7. Arrays e listas polimorficas ──────────────────────
+        System.out.println("--- 7. Arrays e listas polimorficas ---");
+        List<Usuario> listaUsuarios = new ArrayList<>();
+        listaUsuarios.add(new UsuarioFree("Carlos (Free)", "carlos@email.com"));
+        listaUsuarios.add(new UsuarioPremium("Ana (Premium)", "ana@email.com"));
+        
+        for (Usuario u : listaUsuarios) {
+            System.out.println("Usuario: " + u.getNome() + " | Plano: " + u.getTipoUsuario());
+            System.out.println("Max Playlists: " + (u.getMaxPlaylists() == Integer.MAX_VALUE ? "Ilimitado" : u.getMaxPlaylists()));
+            u.exibirAnuncio(); // Chamada polimorfica
+            System.out.println("-");
+        }
+
         System.out.println("=== Fim da Demo ===");
     }
 

@@ -8,7 +8,7 @@ import java.util.List;
  * Classe base da hierarquia de usuarios.
  * Subclasses: UsuarioFree, UsuarioPremium.
  */
-public class Usuario {
+public abstract class Usuario {
 
     private String nome;
     private String email;
@@ -30,32 +30,24 @@ public class Usuario {
      * Retorna o limite maximo de playlists que o usuario pode criar.
      * Subclasses sobrescrevem para definir seus limites.
      */
-    public int getMaxPlaylists() {
-        return Integer.MAX_VALUE;
-    }
+    public abstract int getMaxPlaylists();
 
     /**
      * Retorna o limite maximo de musicas por playlist.
      * Subclasses sobrescrevem para definir seus limites.
      */
-    public int getMaxMusicasPorPlaylist() {
-        return Integer.MAX_VALUE;
-    }
+    public abstract int getMaxMusicasPorPlaylist();
 
     /**
      * Retorna o tipo/plano do usuario como string.
      */
-    public String getTipoUsuario() {
-        return "Usuario";
-    }
+    public abstract String getTipoUsuario();
 
     /**
      * Exibe anuncio antes de reproduzir (se aplicavel).
      * Subclasses Free sobrescrevem para exibir anuncios.
      */
-    public void exibirAnuncio() {
-        // Classe base nao exibe anuncio
-    }
+    public abstract void exibirAnuncio();
 
     // ── Getters e Setters (com validacao) ─────────────────────────
 
